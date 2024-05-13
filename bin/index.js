@@ -16,13 +16,29 @@ program.action(() => {
         type: "input",
         name: "name",
         message: "Where should we create your new project?",
-        default: "./holamundo"
+        default: "./holamundo",
+        prefix: "   " + chalk.white.bgHex('#C66394')(' DIR ') + " "
       },
       {
         type: "list",
-        name: "choice",
-        message: "Choose an option:",
-        choices: ["Option 1", "Option 2", "Option 3"],
+        name: "template",
+        message: "Choose a template:",
+        choices: ["Include sample files", "Empty"],
+        prefix: "   " + chalk.white.bgHex('#C66394')(' tmpl ') + " "
+      },
+      {
+        type: "list",
+        name: "js",
+        message: "Do you plan to write TypeScript?",
+        choices: ["Yes", "No"],
+        prefix: "   " + chalk.white.bgHex('#C66394')(' js ') + " "
+      },
+      {
+        type: "list",
+        name: "git",
+        message: "Initialize a new git repository? (optional)",
+        choices: ["Yes", "No"],
+        prefix: "   " + chalk.white.bgHex('#C66394')(' git ') + " "
       },
     ])
     .then((result) => {
