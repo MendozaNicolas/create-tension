@@ -6,17 +6,9 @@ import chalk from "chalk";
 import path from 'path';
 import ora from "ora";
 
-import { dirname } from 'path';
-import { fileURLToPath } from "url";
-const CURR_DIR = process.cwd();
-
-
 import names from '../src/utils/projectNames.json' assert { type: 'json' };
 import { createProjectDirectory, createFromVanillaTemplate, initializeGitRepository } from './generator.js';
 import spinnerBar from "../src/lib/SpinnerBar.js";
-
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
 
 program.version("1.0.0").description("Create tension project");
 console.log("\n" + chalk.black.bold.bgHex('#ffd31b')(' TENSION '))
