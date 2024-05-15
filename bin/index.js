@@ -1,45 +1,25 @@
 #!/usr/bin/env node
 
 import { program } from "commander";
-import chalk from "chalk";
 import inquirer from "inquirer";
+import chalk from "chalk";
+import path from 'path';
 import ora from "ora";
 
+import { dirname } from 'path';
+import { fileURLToPath } from "url";
+const CURR_DIR = process.cwd();
+
+
 import names from '../src/utils/projectNames.json' assert { type: 'json' };
+import { createProjectDirectory, createFromVanillaTemplate, initializeGitRepository } from './generator.js';
+import spinnerBar from "../src/lib/SpinnerBar.js";
 
 
-const spinnerBar = {
-  interval: 80, // Optional
-  frames: [
-    chalk.hex('#68217a')('██████'), 
-    chalk.hex('#5B3864')('█') + chalk.hex('#68217a')('█████'), 
-    chalk.hex('#554359')('█') + chalk.hex('#5B3864')('█') + chalk.hex('#68217a')('████'), 
-    chalk.hex('#4E4E4D')('█') + chalk.hex('#554359')('█') + chalk.hex('#5B3864')('█') + chalk.hex('#68217a')('███'), 
-    chalk.hex('#445F3D')('█') + chalk.hex('#4E4E4D')('█') + chalk.hex('#554359')('█') + chalk.hex('#5B3864')('█') + chalk.hex('#68217a')('██'),
-    chalk.hex('#3A6F2C')('█') + chalk.hex('#445F3D')('█') + chalk.hex('#4E4E4D')('█') + chalk.hex('#554359')('█') + chalk.hex('#5B3864')('█') + chalk.hex('#68217a')('█'),
-    chalk.hex('#337A20')('█') + chalk.hex('#3A6F2C')('█') + chalk.hex('#4E4E4D')('█') + chalk.hex('#554359')('█') + chalk.hex('#5B3864')('█') + chalk.hex('#68217a')('█'),
-    chalk.hex('#337A20')('██') + chalk.hex('#3A6F2C')('█') + chalk.hex('#554359')('█') + chalk.hex('#4E4E4D')('█') + chalk.hex('#554359')('█'),
-    chalk.hex('#337A20')('███') + chalk.hex('#3A6F2C')('█') + chalk.hex('#4E4E4D')('█') + chalk.hex('#554359')('█'),
-    chalk.hex('#337A20')('████') + chalk.hex('#3A6F2C')('█') + chalk.hex('#4E4E4D')('█'),
-    chalk.hex('#337A20')('█████') + chalk.hex('#3A6F2C')('█'),
-    chalk.hex('#337A20')('██████'),
-    chalk.hex('#3A6F2C')('█') + chalk.hex('#337A20')('█████'),
-    chalk.hex('#445F3D')('█') + chalk.hex('#3A6F2C')('█') + chalk.hex('#337A20')('████'),
-    chalk.hex('#4E4E4D')('█') + chalk.hex('#445F3D')('█') + chalk.hex('#3A6F2C')('█') + chalk.hex('#337A20')('███'),
-    chalk.hex('#554359')('█') + chalk.hex('#4E4E4D')('█') + chalk.hex('#445F3D')('█') + chalk.hex('#3A6F2C')('█') + chalk.hex('#337A20')('██'),
-    chalk.hex('#5B3864')('█') + chalk.hex('#554359')('█') + chalk.hex('#4E4E4D')('█') + chalk.hex('#445F3D')('█') + chalk.hex('#3A6F2C')('█') + chalk.hex('#337A20')('█'),
-    chalk.hex('#68217A')('█') + chalk.hex('#5B3864')('█') + chalk.hex('#554359')('█') + chalk.hex('#4E4E4D')('█') + chalk.hex('#445F3D')('█') + chalk.hex('#3A6F2C')('█'),
-    chalk.hex('#68217A')('██') + chalk.hex('#5B3864')('█') + chalk.hex('#554359')('█') + chalk.hex('#4E4E4D')('█') + chalk.hex('#445F3D')('█'),
-    chalk.hex('#68217A')('███') + chalk.hex('#5B3864')('█') + chalk.hex('#554359')('█') + chalk.hex('#4E4E4D')('█'),
-    chalk.hex('#68217A')('████') + chalk.hex('#5B3864')('█') + chalk.hex('#554359')('█'),
-    chalk.hex('#68217A')('█████') + chalk.hex('#5B3864')('█')]
-};
-// inquirer.registerPrompt('custom', CustomPrompt);
-
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 program.version("1.0.0").description("Create tension project");
 console.log("\n" + chalk.black.bold.bgHex('#ffd31b')(' TENSION '))
-
 
 program.action(() => {
   inquirer
@@ -61,7 +41,7 @@ program.action(() => {
       {
         type: "list",
         name: "js",
-        message: "Do you plan to write TypeScript?",
+        message: "Do you plan to write JavaScript?",
         choices: ["Yes", "No"],
         prefix: "\n   " + chalk.white.bgHex('#68217a')(' js ') + " "
       },
@@ -74,17 +54,29 @@ program.action(() => {
       },
     ])
     .then((result) => {
+
       const spinner = ora({
-        text: `Doing ${result.name}...`,
+        text: "Creating project...",
         spinner: spinnerBar,
         prefixText: "\n"
-      });
-      spinner.start();// Start the spinner
-      setTimeout(() => {
-        spinner.succeed(chalk.green("Done!"));
-      }, 3000);
+      }).start();
+
+      const projectPath = path.join(process.cwd(), result.name);
+      const templatePath = path.join(process.cwd(), "/src/templates/vanilla-template");
+
+      createProjectDirectory(projectPath);
+      
+      if (result.template === 'Include sample files') {
+        // createFromVanillaTemplate(projectPath, path.join(process.cwd(), "/src/templates/vanilla-template"));
+        createFromVanillaTemplate(templatePath, result.name);
+      } 
+
+      if (result.git === 'Yes') {
+        initializeGitRepository(projectPath);
+      }
+      
+      spinner.succeed("Project created successfully!");
     });
 });
-
 
 program.parse(process.argv);
