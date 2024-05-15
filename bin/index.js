@@ -6,12 +6,12 @@ import chalk from "chalk";
 import path from 'path';
 import ora from "ora";
 
-import names from '../src/utils/projectNames.json' assert { type: 'json' };
 import { createProjectDirectory, createFromVanillaTemplate, initializeGitRepository } from './generator.js';
+import projectNames from '../src/utils/projectNames.json' assert { type: 'json' };
 import spinnerBar from "../src/lib/SpinnerBar.js";
 
 program.version("1.0.0").description("Create tension project");
-console.log("\n" + chalk.black.bold.bgHex('#ffd31b')(' TENSION '))
+console.log("\n" + chalk.black.bold.bgHex('#FFD31B')(' TENSION '))
 
 program.action(() => {
   inquirer
@@ -20,29 +20,29 @@ program.action(() => {
         type: "input",
         name: "name",
         message: "Where should we create your new project?",
-        default: "project-"+names[Math.floor(Math.random() * names.length)],
-        prefix: "\n   " + chalk.white.bgHex('#68217a')(' DIR ') + " "
+        default: "project-"+projectNames[Math.floor(Math.random() * projectNames.length)],
+        prefix: "\n   " + chalk.white.bgHex('#68217A')(' DIR ') + " "
       },
       {
         type: "list",
         name: "template",
         message: "Choose a template:",
         choices: ["Include sample files", "Empty"],
-        prefix: "\n   " + chalk.white.bgHex('#68217a')(' tmpl ') + " "
+        prefix: "\n   " + chalk.white.bgHex('#68217A')(' tmpl ') + " "
       },
       {
         type: "list",
         name: "js",
         message: "Do you plan to write JavaScript?",
         choices: ["Yes", "No"],
-        prefix: "\n   " + chalk.white.bgHex('#68217a')(' js ') + " "
+        prefix: "\n   " + chalk.white.bgHex('#68217A')(' js ') + " "
       },
       {
         type: "list",
         name: "git",
         message: "Initialize a new git repository? (optional)",
         choices: ["Yes", "No"],
-        prefix: "\n   " + chalk.white.bgHex('#68217a')(' git ') + " "
+        prefix: "\n   " + chalk.white.bgHex('#68217A')(' git ') + " "
       },
     ])
     .then((result) => {
