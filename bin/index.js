@@ -45,7 +45,7 @@ program.action(() => {
         prefix: "\n   " + chalk.white.bgHex('#68217A')(' git ') + " "
       },
     ])
-    .then((result) => {
+    .then( async (result) => {
 
       const spinner = ora({
         text: "Creating project...",
@@ -56,15 +56,15 @@ program.action(() => {
       const projectPath = path.join(process.cwd(), result.name);
       const templatePath = path.join(process.cwd(), "/src/templates/vanilla-template");
 
-      createProjectDirectory(projectPath);
+      await createProjectDirectory(projectPath);
       
       if (result.template === 'Include sample files') {
         // createFromVanillaTemplate(projectPath, path.join(process.cwd(), "/src/templates/vanilla-template"));
-        createFromVanillaTemplate(templatePath, result.name);
+        await createFromVanillaTemplate(templatePath, result.name);
       } 
 
       if (result.git === 'Yes') {
-        initializeGitRepository(projectPath);
+        await initializeGitRepository(projectPath);
       }
       
       spinner.succeed("Project created successfully!");
