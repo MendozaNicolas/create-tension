@@ -32,8 +32,8 @@ program.action(() => {
       },
       {
         type: "list",
-        name: "js",
-        message: "Do you plan to write JavaScript?",
+        name: "framework",
+        message: "Do you plan to use framework?",
         choices: ["Yes", "No"],
         prefix: "\n   " + chalk.white.bgHex('#68217A')(' js ') + " "
       },
@@ -61,6 +61,11 @@ program.action(() => {
       if (result.template === 'Include sample files') {
         // createFromVanillaTemplate(projectPath, path.join(process.cwd(), "/src/templates/vanilla-template"));
         await createFromVanillaTemplate(templatePath, result.name);
+      } 
+
+      if (result.framework === 'Yes') {
+        // createFromVanillaTemplate(projectPath, path.join(process.cwd(), "/src/templates/vanilla-template"));
+        pass;
       } 
 
       if (result.git === 'Yes') {
